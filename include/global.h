@@ -7,7 +7,6 @@
 #include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/vec.h"
 #include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/mat.h"
 
-
 // texture variables
 extern int texture_width;
 extern int texture_height;
@@ -33,5 +32,6 @@ extern float z_near;
 extern float z_far;
 extern float fov;
 extern la::mat4 proj_mat;
+
 
 #endif

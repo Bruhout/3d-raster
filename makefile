@@ -1,5 +1,5 @@
 CC = g++
-C_FLAGS = -Wall -Wextra -O0 -g3
+C_FLAGS = -Wall -Wextra -O3 -g3
 L_FLAGS = -lSDL2 -lm
 
 BUILD_DIR = build
@@ -14,7 +14,7 @@ game: ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/
 ${BUILD_DIR}/tri.o: ${SRC_DIR}/tri.cpp ${INCLUDE_DIR}/tri.h
 	${CC} -o ${BUILD_DIR}/tri.o ${SRC_DIR}/tri.cpp ${C_FLAGS} -c
 
-${BUILD_DIR}/global.o: ${SRC_DIR}/global.cpp  ${INCLUDE_DIR}/global.h
+${BUILD_DIR}/global.o: ${SRC_DIR}/global.cpp ${INCLUDE_DIR}/global.h
 	${CC} -o ${BUILD_DIR}/global.o ${SRC_DIR}/global.cpp ${C_FLAGS} -c
 
 ${BUILD_DIR}/framerate.o: ${SRC_DIR}/framerate.cpp  ${INCLUDE_DIR}/framerate.h

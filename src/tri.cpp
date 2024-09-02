@@ -137,26 +137,32 @@ void TRI_FillTriangleTex(
             float fragment_z = (v1.z*u + v2.z*v + v3.z*w);
 
             if (
-                u + v + w > 0.998f && u + v + w < 1.002f &&
+                u + v + w > 0.998 && u + v + w < 1.002 &&
                 depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z
-            ) {
-                int texel_x = (u/tv1.x + v/tv2.x + w/tv3.x)*texture_width;
-                int texel_y = (u/tv1.y + v/tv2.y + w/tv3.y)*texture_height;
+            )
+            {
+                int texel_x = (u*tv1.x + v*tv2.x + w*tv3.x) * texture_width; 
+                int texel_y = (u*tv1.y + v*tv2.y + w*tv3.y) * texture_height;
 
-                unsigned char red = 0;
-                unsigned char green = 0;
-                unsigned char blue = 0;
+                if (texel_x < texture_width && texel_y < texture_height)
+                {
+                    unsigned char red;
+                    unsigned char green;
+                    unsigned char blue;
 
-                if (texel_x < texture_width && texel_y < texture_height) {
-                    unsigned char* texel = texture_image + (texel_y*texture_width + texel_x)*texture_bpp;
-                    red = *(texel + 0);
+                    unsigned char* texel = texture_image + (
+                        ((texture_width * texel_y) + texel_x)*texture_bpp
+                    );
+
+                    red = *texel;
                     green = *(texel + 1);
                     blue = *(texel + 2);
+
+                    SDL_SetRenderDrawColor(renderer , red , green , blue , 255);
+                    SDL_RenderDrawPoint(renderer , j , i);
+                    depth_buffer[(i*WINDOW_WIDTH) + j] = fragment_z;    
                 }
-                SDL_SetRenderDrawColor(renderer , red , green , blue , 255);
-                SDL_RenderDrawPoint(renderer , j , i);
             }
-            
         }
     }
 }

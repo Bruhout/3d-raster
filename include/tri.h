@@ -21,20 +21,19 @@ void TRI_FillTriangle(
 
 void TRI_FillTriangleTex(
     la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
-    float tx0 , float ty0 ,
-    float tx1 , float ty1 ,
-    float tx2 , float ty2 ,
+    la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
+    float* depth_buffer ,
     SDL_Renderer* renderer
 );
 
 void TRI_FillTriangleInterp(
     la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    float* depth_buffer ,
     SDL_Renderer* renderer
 );
 
 void TRI_DrawLine(
-    int x0 , int y0,
-    int x1 , int y1,
+    la::vec3 v1 , la::vec3 v2 ,
     SDL_Renderer* renderer
 );
 
