@@ -28,7 +28,7 @@ float tri_area(
 }
 
 void TRI_FillTriangle(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     float* depth_buffer ,
     SDL_Renderer* renderer
 )
@@ -53,11 +53,14 @@ void TRI_FillTriangle(
             float v = tri_area(fragment_vec , v1 , v3) / total_area;
             float w = tri_area(fragment_vec , v1 , v2) / total_area;
 
-            float fragment_z = (v1.z*u + v2.z*v + v3.z*w);
+            float fragment_w = u*v1.w + v*v2.w + w*v3.w;
+
+            float fragment_z = (v1.z*u / fragment_w + v2.z*v / fragment_w + v3.z*w / fragment_w) * fragment_w;
 
             if (
                 u + v + w > 0.998 && u + v + w < 1.002 &&
-                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z
+                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z &&
+                fragment_z > 0.2f // do not render if too close to camera
             )
             {
                 SDL_RenderDrawPoint(renderer , j , i);
@@ -67,7 +70,7 @@ void TRI_FillTriangle(
     }
 }
 void TRI_FillTriangleInterp(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     float* depth_buffer ,
     SDL_Renderer* renderer
 )
@@ -96,7 +99,8 @@ void TRI_FillTriangleInterp(
 
             if (
                 u + v + w > 0.998 && u + v + w < 1.002 &&
-                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z
+                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z &&
+                fragment_z > 0.2f // do not render if too close to camera
             )
             {
                 SDL_SetRenderDrawColor(renderer , u*255.0f , v*255.0f , w*255.0f , 255);
@@ -108,12 +112,16 @@ void TRI_FillTriangleInterp(
 }
 
 void TRI_FillTriangleTex(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
     float* depth_buffer ,
     SDL_Renderer* renderer
 )
 {
+    tv1 = tv1 / v1.w;
+    tv2 = tv2 / v2.w;
+    tv3 = tv3 / v3.w;
+
     v1 = v1.ViewportTransform(WINDOW_WIDTH , WINDOW_HEIGHT);
     v2 = v2.ViewportTransform(WINDOW_WIDTH , WINDOW_HEIGHT);
     v3 = v3.ViewportTransform(WINDOW_WIDTH , WINDOW_HEIGHT);
@@ -134,15 +142,18 @@ void TRI_FillTriangleTex(
             float v = tri_area(fragment_vec , v1 , v3) / total_area;
             float w = tri_area(fragment_vec , v1 , v2) / total_area;
 
-            float fragment_z = (v1.z*u + v2.z*v + v3.z*w);
+            float fragment_w = (v1.w*u + v2.w*v + v3.w*w);
+
+            float fragment_z = (v1.z*u/fragment_w + v2.z*v/fragment_w + v3.z*w/fragment_w) * fragment_w;
 
             if (
                 u + v + w > 0.998 && u + v + w < 1.002 &&
-                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z
+                depth_buffer[(i*WINDOW_WIDTH) + j] > fragment_z &&
+                fragment_z > 0.2f // do not render if too close to the camera
             )
             {
-                int texel_x = (u*tv1.x + v*tv2.x + w*tv3.x) * texture_width; 
-                int texel_y = (u*tv1.y + v*tv2.y + w*tv3.y) * texture_height;
+                int texel_x = (u*tv1.x + v*tv2.x + w*tv3.x) * fragment_w * texture_width; 
+                int texel_y = (u*tv1.y + v*tv2.y + w*tv3.y) * fragment_w * texture_height;
 
                 if (texel_x < texture_width && texel_y < texture_height)
                 {

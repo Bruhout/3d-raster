@@ -1,8 +1,9 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WINDOW_HEIGHT 512
-#define WINDOW_WIDTH 512
+// instead of using variables i have used defines because these remain constant throughout the program
+#define WINDOW_HEIGHT 512 
+#define WINDOW_WIDTH 512  
 
 #include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/vec.h"
 #include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/mat.h"

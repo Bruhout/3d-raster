@@ -14,20 +14,20 @@ float tri_area(
 );
 
 void TRI_FillTriangle(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
-    float* depth_buffer ,
-    SDL_Renderer* renderer
-);
-
-void TRI_FillTriangleTex(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
-    la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     float* depth_buffer ,
     SDL_Renderer* renderer
 );
 
 void TRI_FillTriangleInterp(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
+    float* depth_buffer ,
+    SDL_Renderer* renderer
+);
+
+void TRI_FillTriangleTex(
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
+    la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
     float* depth_buffer ,
     SDL_Renderer* renderer
 );
