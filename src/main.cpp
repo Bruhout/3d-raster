@@ -14,8 +14,11 @@ void init_window(SDL_Window** window , SDL_Renderer** renderer);
 void process_input(int* game_is_running);
 void reset_depth_buffer(float* depth_buffer);
 
+void setup_globals();
+
 int main(void)
 {
+    setup_globals();
     // define and setup the vertices--------------------------------------------------------
     //--------------------------------------------------------------------------------------
     la::vec3 vertices[] = {
@@ -88,176 +91,93 @@ int main(void)
         SDL_SetRenderDrawColor(renderer , 50 , 50 , 120 , 255);
         SDL_RenderClear(renderer);
 
-        bool tex = true;
-        // triangle draw calls
-        if (tex == false) 
-        {
-            // face 1
-            SDL_SetRenderDrawColor(renderer , 200 , 50 , 50 , 255);
-            TRI_FillTriangle(
-                fv[0] , fv[1] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[0] , fv[3] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
+        // triangle draw calls---------------------------------------------------------------
+        //-----------------------------------------------------------------------------------
+        // face 1
+        TRI_FillTriangleTex(
+            fv[0] , fv[1] , fv[2] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[0] , fv[3] , fv[2] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 2
-            SDL_SetRenderDrawColor(renderer , 50 , 200 , 50 , 255);
-            TRI_FillTriangle(
-                fv[4] , fv[5] , fv[6] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[4] , fv[7] , fv[6] ,
-                depth_buffer ,
-                renderer
-            );
+        // face 2
+        TRI_FillTriangleTex(
+            fv[4] , fv[5] , fv[6] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[4] , fv[7] , fv[6] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 3
-            SDL_SetRenderDrawColor(renderer , 152, 166, 235 , 255);
-            TRI_FillTriangle(
-                fv[4] , fv[5] , fv[1] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[4] , fv[0] , fv[1] ,
-                depth_buffer ,
-                renderer
-            );
+        // face 3
+        TRI_FillTriangleTex(
+            fv[4] , fv[5] , fv[1] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[4] , fv[0] , fv[1] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 4
-            SDL_SetRenderDrawColor(renderer , 169, 93, 199 , 255);
-            TRI_FillTriangle(
-                fv[7] , fv[6] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[7] , fv[3] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
+        // face 4
+        TRI_FillTriangleTex(
+            fv[7] , fv[6] , fv[2] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[7] , fv[3] , fv[2] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 5
-            SDL_SetRenderDrawColor(renderer , 0, 255, 204 , 255);
-            TRI_FillTriangle(
-                fv[5] , fv[1] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[5] , fv[6] , fv[2] ,
-                depth_buffer ,
-                renderer
-            );
+        // face 5
+        TRI_FillTriangleTex(
+            fv[5] , fv[1] , fv[2] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[5] , fv[6] , fv[2] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 6
-            SDL_SetRenderDrawColor(renderer , 230, 192, 28 , 255);
-            TRI_FillTriangle(
-                fv[4] , fv[0] , fv[3] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangle(
-                fv[4] , fv[7] , fv[3] ,
-                depth_buffer ,
-                renderer
-            );
-        }
-        else
-        {
-            // face 1
-            TRI_FillTriangleTex(
-                fv[0] , fv[1] , fv[2] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[0] , fv[3] , fv[2] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
+        // face 6
+        TRI_FillTriangleTex(
+            fv[4] , fv[0] , fv[3] ,
+            tv[0] , tv[1] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
+        TRI_FillTriangleTex(
+            fv[4] , fv[7] , fv[3] ,
+            tv[0] , tv[3] , tv[2] ,
+            depth_buffer ,
+            renderer
+        );
 
-            // face 2
-            TRI_FillTriangleTex(
-                fv[4] , fv[5] , fv[6] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[4] , fv[7] , fv[6] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-
-            // face 3
-            TRI_FillTriangleTex(
-                fv[4] , fv[5] , fv[1] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[4] , fv[0] , fv[1] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-
-            // face 4
-            TRI_FillTriangleTex(
-                fv[7] , fv[6] , fv[2] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[7] , fv[3] , fv[2] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-
-            // face 5
-            TRI_FillTriangleTex(
-                fv[5] , fv[1] , fv[2] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[5] , fv[6] , fv[2] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-
-            // face 6
-            TRI_FillTriangleTex(
-                fv[4] , fv[0] , fv[3] ,
-                tv[0] , tv[1] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-            TRI_FillTriangleTex(
-                fv[4] , fv[7] , fv[3] ,
-                tv[0] , tv[3] , tv[2] ,
-                depth_buffer ,
-                renderer
-            );
-        }
-
-
+        
         reset_depth_buffer(depth_buffer);
         SDL_RenderPresent(renderer);
         frame_time = get_frame_time(&last_frame_time);
