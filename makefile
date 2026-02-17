@@ -23,7 +23,7 @@ ${BUILD_DIR}/framerate.o: ${SRC_DIR}/framerate.cpp  ${INCLUDE_DIR}/framerate.h |
 
 
 ${BUILD_DIR}:
-	mkdir -r ${BUILD_DIR}
+	mkdir ${BUILD_DIR}
 
 ${LINALG_PATH}/linalg.a:
 	make linalg.a
