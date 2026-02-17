@@ -1,7 +1,8 @@
 #include "../include/global.h"
 
+
 #define STB_IMAGE_IMPLEMENTATION
-#include "/home/ishaan-user/libs-clones/stb/stb_image.h"
+#include "../include/stb_image.h"
 
 // texture variables
 int texture_width = 10;

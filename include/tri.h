@@ -1,5 +1,5 @@
-#include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/vec.h"
-#include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/mat.h"
+#include "../nimbus-linalg/include/vec.h"
+#include "../nimbus-linalg/include/mat.h"
 
 #include <SDL2/SDL.h>
 

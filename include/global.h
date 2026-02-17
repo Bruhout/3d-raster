@@ -4,8 +4,8 @@
 #define WINDOW_HEIGHT 512
 #define WINDOW_WIDTH 512
 
-#include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/vec.h"
-#include "/home/ishaan-user/Documents/C++/nimbus-linalg/include/mat.h"
+#include "../nimbus-linalg/include/vec.h"
+#include "../nimbus-linalg/include/mat.h"
 
 // texture variables
 extern int texture_width;
