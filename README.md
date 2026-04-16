@@ -3,6 +3,7 @@
 
 Note that this engine is NOT hardware accelerated and runs fully on the CPU as a single threaded process.
 
+The main branch contains an implementation that will output a video via FFMPEG, and thus requies it as as dependancy. The sdl branch used sdl to create a window and render in real time. Clone whichever you prefer, or clone both.
 
 https://github.com/user-attachments/assets/17a6a598-6a31-44b9-82f5-90308cf15c70
 
