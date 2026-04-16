@@ -3,6 +3,7 @@
 
 Note that this engine is NOT hardware accelerated and runs fully on the CPU as a single threaded process.
 
+This is the sdl implementation, a video is created and frames are displayed on this window. Use the main branch for a video output implementation.
 
 https://github.com/user-attachments/assets/17a6a598-6a31-44b9-82f5-90308cf15c70
 
