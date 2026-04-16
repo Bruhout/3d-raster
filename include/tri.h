@@ -1,7 +1,6 @@
 #include "../nimbus-linalg/include/vec.h"
 #include "../nimbus-linalg/include/mat.h"
 
-#include <SDL2/SDL.h>
 
 void bounding_box(
     la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
@@ -14,30 +13,20 @@ float tri_area(
 );
 
 void TRI_FillTriangle(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     float* depth_buffer ,
-    SDL_Renderer* renderer
-);
-
-void TRI_FillTriangleTex(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
-    la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
-    float* depth_buffer ,
-    SDL_Renderer* renderer
+    unsigned char* frame_image
 );
 
 void TRI_FillTriangleInterp(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
     float* depth_buffer ,
-    SDL_Renderer* renderer
+    unsigned char* frame_image
 );
 
-void TRI_DrawLine(
-    la::vec3 v1 , la::vec3 v2 ,
-    SDL_Renderer* renderer
-);
-
-void TRI_DrawTriangle(
-    la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,
-    SDL_Renderer* renderer
+void TRI_FillTriangleTex(
+    la::vec4 v1 , la::vec4 v2 , la::vec4 v3 ,
+    la::vec3 tv1 , la::vec3 tv2 , la::vec3 tv3 ,
+    float* depth_buffer ,
+    unsigned char *frame_image
 );

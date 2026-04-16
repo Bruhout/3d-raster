@@ -1,7 +1,11 @@
+#define STB_IMAGE_IMPLEMENTATION
+#include "../include/stb_image.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#include "../include/stb_image_write.h"
+
 #include <iostream>
 #include <time.h>
-
-#include <SDL2/SDL.h>
+#include <stdlib.h>
 
 #include "../nimbus-linalg/include/vec.h"
 #include "../nimbus-linalg/include/mat.h"
@@ -10,12 +14,22 @@
 #include "../include/global.h"
 #include "../include/framerate.h"
 
-void init_window(SDL_Window** window , SDL_Renderer** renderer);
-void process_input(int* game_is_running);
 void reset_depth_buffer(float* depth_buffer);
 
-int main(void)
+int main(int argc, char* argv[])
 {
+    WINDOW_HEIGHT = atoi(argv[1]);
+    WINDOW_WIDTH = atoi(argv[2]);
+    CHANNELS = atoi(argv[3]);
+    int total_frames = atoi(argv[4]);
+
+    // texture variables
+    texture_image = stbi_load(
+        "container.jpg" , 
+        &texture_width , &texture_height ,
+        &texture_bpp , 0
+    );
+
     // define and setup the vertices--------------------------------------------------------
     //--------------------------------------------------------------------------------------
     la::vec3 vertices[] = {
@@ -28,6 +42,7 @@ int main(void)
         la::vec3(-0.5f , -0.5f ,  0.5f),
         la::vec3(-0.5f ,  0.5f ,  0.5f)
     };
+
 
 
     // define texture coordinates and texture image
@@ -43,11 +58,7 @@ int main(void)
     // --------------------------------------------------------------------------
     float depth_buffer[WINDOW_HEIGHT * WINDOW_WIDTH] = { 1.0f };
 
-    // BEGIN SDL-----------------------------------------------------------------
-    // --------------------------------------------------------------------------
-    SDL_Window* window;
-    SDL_Renderer* renderer;
-    init_window(&window , &renderer);
+    unsigned char* frame_image = new unsigned char[WINDOW_HEIGHT * WINDOW_WIDTH * 4];
 
     int game_is_running = 0;
 
@@ -57,8 +68,11 @@ int main(void)
     float last_frame_time = clock();
     float frame_time = 0;
 
-    while (game_is_running == 0)
+    // while (game_is_running == 0)
+    int frame_count = 0;
+    while (frame_count < total_frames)
     {
+        frame_count++;
         obj_mat = obj_mat.RotateMat(pitch , yaw , 0.0f);
 
         // apply all transforms
@@ -73,114 +87,32 @@ int main(void)
             // apply perspective projection
             fv[i] = fv[i].PersProjectVec(proj_mat);
 
-            // apply viewport transform
-            // removed, viewport transform now performed in the draw triangle function
-            // fv[i] = fv[i].ViewportTransform(WINDOW_WIDTH , WINDOW_HEIGHT);
-
             // add frame time to maintain game speed
             pitch = frame_time * 0.5f;
             yaw = frame_time * 1.0f;
         }
 
-        process_input(&game_is_running);
-
-        SDL_SetRenderDrawColor(renderer , 50 , 50 , 120 , 255);
-        SDL_RenderClear(renderer);
+        for (int i=0 ; i<WINDOW_HEIGHT * WINDOW_WIDTH * 4 ; i = i+4)
+        {
+            frame_image[i] = 50;
+            frame_image[i + 1] = 50;
+            frame_image[i + 2] = 120;
+            frame_image[i + 3] = 255;
+        }
 
         // triangle draw calls
-
-        /*
-        // face 1
-        SDL_SetRenderDrawColor(renderer , 200 , 50 , 50 , 255);
-        TRI_FillTriangle(
-            fv[0] , fv[1] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[0] , fv[3] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-
-        // face 2
-        SDL_SetRenderDrawColor(renderer , 50 , 200 , 50 , 255);
-        TRI_FillTriangle(
-            fv[4] , fv[5] , fv[6] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[4] , fv[7] , fv[6] ,
-            depth_buffer ,
-            renderer
-        );
-
-        // face 3
-        SDL_SetRenderDrawColor(renderer , 152, 166, 235 , 255);
-        TRI_FillTriangle(
-            fv[4] , fv[5] , fv[1] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[4] , fv[0] , fv[1] ,
-            depth_buffer ,
-            renderer
-        );
-
-        // face 4
-        SDL_SetRenderDrawColor(renderer , 169, 93, 199 , 255);
-        TRI_FillTriangle(
-            fv[7] , fv[6] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[7] , fv[3] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-
-        // face 5
-        SDL_SetRenderDrawColor(renderer , 0, 255, 204 , 255);
-        TRI_FillTriangle(
-            fv[5] , fv[1] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[5] , fv[6] , fv[2] ,
-            depth_buffer ,
-            renderer
-        );
-
-        // face 6
-        SDL_SetRenderDrawColor(renderer , 230, 192, 28 , 255);
-        TRI_FillTriangle(
-            fv[4] , fv[0] , fv[3] ,
-            depth_buffer ,
-            renderer
-        );
-        TRI_FillTriangle(
-            fv[4] , fv[7] , fv[3] ,
-            depth_buffer ,
-            renderer
-        );
-        */
-
         // face 1
         TRI_FillTriangleTex(
             fv[0] , fv[1] , fv[2] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[0] , fv[3] , fv[2] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
 
         // face 2
@@ -188,13 +120,13 @@ int main(void)
             fv[4] , fv[5] , fv[6] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[4] , fv[7] , fv[6] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
 
         // face 3
@@ -202,13 +134,13 @@ int main(void)
             fv[4] , fv[5] , fv[1] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[4] , fv[0] , fv[1] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
 
         // face 4
@@ -216,13 +148,13 @@ int main(void)
             fv[7] , fv[6] , fv[2] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[7] , fv[3] , fv[2] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
 
         // face 5
@@ -230,13 +162,13 @@ int main(void)
             fv[5] , fv[1] , fv[2] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[5] , fv[6] , fv[2] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
 
         // face 6
@@ -244,79 +176,25 @@ int main(void)
             fv[4] , fv[0] , fv[3] ,
             tv[0] , tv[1] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
         TRI_FillTriangleTex(
             fv[4] , fv[7] , fv[3] ,
             tv[0] , tv[3] , tv[2] ,
             depth_buffer ,
-            renderer
+            frame_image
         );
-
         reset_depth_buffer(depth_buffer);
-        SDL_RenderPresent(renderer);
+        // SDL_RenderPresent(renderer);
+	
+	std::setvbuf(stdout, NULL, _IONBF, 0);
+	std::cout.write((char*)frame_image, WINDOW_HEIGHT*WINDOW_WIDTH*CHANNELS);	
+
         frame_time = get_frame_time(&last_frame_time);
     }
 
-    SDL_DestroyWindow(window);
-    SDL_DestroyRenderer(renderer);
-    SDL_Quit();
-
     return 0;
 
-}
-
-void init_window(SDL_Window** window , SDL_Renderer** renderer)
-{
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0) { printf("SLD_Init error\n"); }
-
-    *window = SDL_CreateWindow(
-        NULL,
-        SDL_WINDOWPOS_CENTERED,
-        SDL_WINDOWPOS_CENTERED,
-        WINDOW_WIDTH,
-        WINDOW_HEIGHT,
-        SDL_WINDOW_BORDERLESS
-    );
-
-    *renderer = SDL_CreateRenderer(
-        *window,
-        -1,
-        0
-    );
-}
-
-void process_input(int* game_is_running)
-{
-    SDL_Event event;
-    SDL_PollEvent(&event);
-
-    if (event.type == SDL_QUIT) {
-        *game_is_running = 1;
-    }
-
-    if (event.type == SDL_KEYDOWN)
-    {
-        if (event.key.keysym.sym == SDLK_w) {
-            cam_pos = cam_pos + (cam_aim - cam_pos).Normalize() * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_s) {
-            cam_pos = cam_pos - (cam_aim - cam_pos).Normalize() * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_a) {
-            la::vec3 cam_right = (world_up * cam_pos).Normalize();
-            cam_pos = cam_pos - cam_right * 0.1f;
-            cam_aim = cam_aim - cam_right * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_d) {
-            la::vec3 cam_right = (world_up * cam_pos).Normalize();
-            cam_pos = cam_pos + cam_right * 0.1f;
-            cam_aim = cam_aim + cam_right * 0.1f;
-        }
-
-        view_mat = la::mat4().LookAt(
-            cam_pos ,
-            cam_aim ,
-            world_up
-        );
-    }
 }
 
 void reset_depth_buffer(float* depth_buffer)

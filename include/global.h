@@ -1,9 +1,6 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-#define WINDOW_HEIGHT 512
-#define WINDOW_WIDTH 512
-
 #include "../nimbus-linalg/include/vec.h"
 #include "../nimbus-linalg/include/mat.h"
 
@@ -13,6 +10,10 @@ extern int texture_height;
 extern int texture_bpp;
 extern unsigned char* texture_image;
 
+// windows variables
+extern int WINDOW_HEIGHT;
+extern int WINDOW_WIDTH; 
+extern int CHANNELS;
 
 // object matrix variables
 extern float pitch;

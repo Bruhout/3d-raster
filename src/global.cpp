@@ -1,19 +1,15 @@
 #include "../include/global.h"
 
-
-#define STB_IMAGE_IMPLEMENTATION
-#include "../include/stb_image.h"
-
 // texture variables
 int texture_width = 10;
 int texture_height = 10;
 int texture_bpp = 3;
-unsigned char* texture_image = stbi_load(
-    "container.jpg" , 
-    &texture_width , &texture_height ,
-    &texture_bpp , 0
-);
+unsigned char* texture_image;
 
+// image variables
+int WINDOW_HEIGHT = 256;
+int WINDOW_WIDTH = 256;
+int CHANNELS = 256;
 
 // object matrix variables
 float pitch = 0.0f;
