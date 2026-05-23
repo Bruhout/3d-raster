@@ -16,8 +16,21 @@ class vec4;
 
 class vec3 
 {
-public:
+    friend class vec4;
+    friend class mat4;
+
+    private:
     float x , y , z;
+    
+    public:
+    // getters and setters ------------------------
+    float get_x();
+    float get_y();
+    float get_z();
+
+    void set_x(float X);
+    void set_y(float Y);
+    void set_z(float Z);
 
     // constructor functions------------------------
     vec3();
@@ -67,8 +80,23 @@ public:
 
 class vec4 
 {
-public:
+    friend class vec3;
+    friend class mat4;
+
+    private:
     float x , y , z , w;
+    
+    public:
+    // getters and setters ------------------------
+    float get_x();
+    float get_y();
+    float get_z();
+    float get_w();
+
+    void set_x(float X);
+    void set_y(float Y);
+    void set_z(float Z);
+    void set_w(float W);
 
     // constuctor functions------------------------
     vec4();

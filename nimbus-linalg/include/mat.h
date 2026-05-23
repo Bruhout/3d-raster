@@ -7,9 +7,17 @@ class vec3; // just to avoid build errors
 class vec4; // ignore these two forward declarations
 
 class mat4
-{
-public:
+{   
+    friend class vec3;
+    friend class vec4;
+
+    private:
     float array[16];
+    
+    public:
+    // getters and setters -------------------------
+    const float* get_array() const;
+    void set_array(float* Array);
 
     // constructor functions------------------------
     mat4();

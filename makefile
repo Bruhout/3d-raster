@@ -1,5 +1,5 @@
 CC = g++
-C_FLAGS = -Wall -Wextra -O3 -g3
+C_FLAGS = -Wall -Wextra -O3 -g3 -fopenmp
 L_FLAGS = -lSDL2 -lm
 
 BUILD_DIR = build

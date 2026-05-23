@@ -18,6 +18,7 @@ extern unsigned char* texture_image;
 extern float pitch;
 extern float yaw;
 extern la::mat4 obj_mat;
+extern la::mat4 plain_mat;
 
 
 // view matrix variables

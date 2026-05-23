@@ -4,52 +4,35 @@
 #include <iostream>
 #include <iomanip>
 #include <math.h>
+#include <cstring>
 
 using namespace la;
 
 //===============================================================================================
+// getters and setters -------------------------
+const float* mat4::get_array() const { return array; }
+void mat4::set_array(float* Array) { memcpy(array, Array, 16 * sizeof(float)); }
+
 // constructor functions------------------------
 mat4::mat4()
 {
-    for (int i=0 ; i<16 ; i++)
-    {
-        switch (i)
-        {
-            case 0:
-                array[i] = 1.0f;
-                continue;
-            case 5:
-                array[i] = 1.0f;
-                continue;
-            case 10:
-                array[i] = 1.0f;
-                continue;
-            case 15:
-                array[i] = 1.0f;
-                continue;
-            default:
-                array[i] = 0.0f;
-                continue;
-        }
-    }
+    memset(array, 0, sizeof(array));
+    array[0] = array[5] = array[10] = array[15] = 1.0f;
 }
 mat4::mat4(float num)
 {
-    for (int i=0 ; i<16 ; i++) {
-        array[i] = num;
-    }
+    array[ 0]=num; array[ 1]=num; array[ 2]=num; array[ 3]=num;
+    array[ 4]=num; array[ 5]=num; array[ 6]=num; array[ 7]=num;
+    array[ 8]=num; array[ 9]=num; array[10]=num; array[11]=num;
+    array[12]=num; array[13]=num; array[14]=num; array[15]=num;
 }
-mat4::mat4(float* array_)
+mat4::mat4(float* Array)
 {
-    for (int i=0 ; i<16 ; i++) {
-        array[i] = array_[i];
-    }
+    memcpy(array, Array, 16 * sizeof(float));
 }
 mat4::mat4(vec3 v1 , vec3 v2 , vec3 v3)
 {
-    for (int i=0 ; i<16 ; i++) {
-        array[i] =- 0.0f;
-    }
+    memset(array, 0, sizeof(array));
     array[15] = 1.0f;
 
     array[0] = v1.x;
@@ -66,9 +49,7 @@ mat4::mat4(vec3 v1 , vec3 v2 , vec3 v3)
 }
 mat4::mat4(vec4 v1 , vec4 v2 , vec4 v3)
 {
-    for (int i=0 ; i<16 ; i++) {
-        array[i] =- 0.0f;
-    }
+    memset(array, 0, sizeof(array));
     array[15] = 1.0f;
 
     array[0] = v1.x;
@@ -98,21 +79,7 @@ vec4 mat4::operator[](int index)
 }
 mat4 mat4::operator*(mat4 mat)
 {
-    mat4 new_mat;
-    for (int i=0 ; i<4 ; i++)
-    {
-        for (int j=0 ; j<4 ; j++)
-        {
-            float sum = 0.0f;
-            for (int k=0 ; k<4 ; k++)
-            {
-                sum += array[i*4 + k] * mat.array[k*4 + j];
-            }
-            new_mat.array[i*4 + j] = sum;
-        }
-    }
-
-    return new_mat;
+    return this->MultiplyMatrices(mat);
 }
 void mat4::operator*=(mat4 mat)
 {
@@ -130,9 +97,7 @@ void mat4::operator*=(mat4 mat)
         }
     }
 
-    for (int i=0 ; i<6 ; i++) {
-        array[i] = new_array[i];
-    }
+    memcpy(array, new_array, 16 * sizeof(float));
 }
 
 
@@ -178,42 +143,45 @@ mat4 mat4::RotateMat(float pitch , float yaw , float roll)
 mat4 mat4::RotateMatX(float pitch)
 {
     mat4 new_mat = *this;
+    float s = sin(pitch), c = cos(pitch);
     
-    float array_[] = {
-        1.0f ,    0.0f     ,     0.0f   , 0.0f ,
-        0.0f ,  cos(pitch) , sin(pitch) , 0.0f ,
-        0.0f , -sin(pitch) , cos(pitch) , 0.0f ,
-        0.0f ,    0.0f     ,     0.0f   , 1.0f
+    float array[] = {
+        1.0f , 0.0f ,  0.0f , 0.0f ,
+        0.0f ,   c  ,   s   , 0.0f ,
+        0.0f ,  -s  ,   c  , 0.0f ,
+        0.0f , 0.0f ,  0.0f , 1.0f
     };
-    mat4 rot_mat = mat4(array_);
+    mat4 rot_mat = mat4(array);
 
     return rot_mat * new_mat;
 }
 mat4 mat4::RotateMatY(float yaw)
 {
     mat4 new_mat = *this;
+    float s = sin(yaw), c = cos(yaw);
 
-    float array_[] = {
-         cos(yaw) , 0.0f , sin(yaw)  , 0.0f ,
-        0.0f     , 1.0f ,   0.0f    , 0.0f ,
-        -sin(yaw) , 0.0f , cos(yaw)  , 0.0f ,
-        0.0f     , 0.0f ,   0.0f    , 1.0f
+    float array[] = {
+         c    ,  0.0f  ,    s   , 0.0f ,
+        0.0f  ,  1.0f  ,  0.0f  , 0.0f ,
+        -s    ,  0.0f  ,    c   , 0.0f ,
+        0.0f  ,  0.0f  ,  0.0f  , 1.0f
     };
-    mat4 rot_mat = mat4(array_);
+    mat4 rot_mat = mat4(array);
 
     return rot_mat * new_mat;
 }
 mat4 mat4::RotateMatZ(float roll)
 {
     mat4 new_mat = *this;
+    float s = sin(roll), c = cos(roll);
 
-    float array_[] = {
-        cos(roll)  , sin(roll) , 0.0f , 0.0f ,
-        -sin(roll) , cos(roll) , 0.0f , 0.0f ,
-        0.0f       ,   0.0f    , 1.0f , 0.0f ,
-        0.0f       ,   0.0f    , 0.0f , 1.0f
+    float array[] = {
+         c    ,    s   , 0.0f , 0.0f ,
+        -s    ,    c   , 0.0f , 0.0f ,
+        0.0f  ,  0.0f  , 1.0f , 0.0f ,
+        0.0f  ,  0.0f  , 0.0f , 1.0f
     };
-    mat4 rot_mat = mat4(array_);
+    mat4 rot_mat = mat4(array);
 
     return rot_mat * new_mat;
 }

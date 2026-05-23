@@ -19,6 +19,7 @@ unsigned char* texture_image = stbi_load(
 float pitch = 0.0f;
 float yaw = 0.0f;
 la::mat4 obj_mat = la::mat4();
+la::mat4 plain_mat = la::mat4();
 
 
 // view matrix variables
