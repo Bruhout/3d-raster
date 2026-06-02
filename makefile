@@ -7,7 +7,6 @@ INCLUDE_DIR = include
 SRC_DIR = src
 
 LINALG_PATH = nimbus-linalg
-BUILD_DIR = build
 
 game: ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/framerate.o ${LINALG_PATH}/linalg.a
 	${CC} -o game ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/framerate.o ${LINALG_PATH}/linalg.a ${C_FLAGS} ${L_FLAGS}
@@ -26,4 +25,4 @@ ${BUILD_DIR}:
 	mkdir ${BUILD_DIR}
 
 ${LINALG_PATH}/linalg.a:
-	make linalg.a
+	cd ${LINALG_PATH} && make
