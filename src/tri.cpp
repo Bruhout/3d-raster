@@ -67,12 +67,12 @@ void TRI_FillTriangleTex(
             float u = tri_area(frag, v2, v3) / total_area;
             float v = tri_area(frag, v1, v3) / total_area;
             float w = tri_area(frag, v1, v2) / total_area;
-            float fz = v1.get_z()*u + v2.get_z()*v + v3.get_z()*w;
+            float fragment_z = v1.get_z()*u + v2.get_z()*v + v3.get_z()*w;
 
             if (u + v + w > 0.998f && u + v + w < 1.002f)
             {
-                int idx = i * WINDOW_WIDTH + j;
-                if (depth_buffer[idx] > fz)
+                int index = i * WINDOW_WIDTH + j;
+                if (depth_buffer[index] > fragment_z)
                 {
                     int texel_x = (int)((u*tv1.get_x() + v*tv2.get_x() + w*tv3.get_x()) * texture_width);
                     int texel_y = (int)((u*tv1.get_y() + v*tv2.get_y() + w*tv3.get_y()) * texture_height);
@@ -88,11 +88,12 @@ void TRI_FillTriangleTex(
                                         ((Uint32)texel[1] << 16) |
                                         ((Uint32)texel[2] <<  8) | 0xFF;
 
-                        depth_buffer[idx] = fz;
-                        pixel_buffer[idx] = packed;
+                        depth_buffer[index] = fragment_z;
+                        pixel_buffer[index] = packed;
                     }
                 }
             }
         }
     }
 }
+

@@ -31,7 +31,7 @@ int main(void)
     };
 
     // define texture coordinates
-    la::vec3 tv[] = {
+    la::vec3 texture_coords[] = {
         la::vec3(1.0f , 0.0f , 1.0f),
         la::vec3(1.0f , 1.0f , 1.0f),
         la::vec3(0.0f , 1.0f , 1.0f),
@@ -65,7 +65,7 @@ int main(void)
     int game_is_running = 0;
 
     // final vertices
-    la::vec4 fv[8];
+    la::vec4 final_vertices[8];
 
     float last_frame_time = clock();
 
@@ -79,9 +79,9 @@ int main(void)
         yaw   = total_time * 0.2f;
         for (int i=0 ; i<8 ; i++)
         {
-            fv[i] = vertices[i] * obj_mat;
-            fv[i] = fv[i] * view_mat;
-            fv[i] = fv[i].PersProjectVec(proj_mat);
+            final_vertices[i] = vertices[i] * obj_mat;
+            final_vertices[i] = final_vertices[i] * view_mat;
+            final_vertices[i] = final_vertices[i].PersProjectVec(proj_mat);
 
         }
 
@@ -94,73 +94,73 @@ int main(void)
         // --- triangle draw calls ---
         // face 1
         TRI_FillTriangleTex(
-            fv[0] , fv[1] , fv[2] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[0] , final_vertices[1] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[0] , fv[3] , fv[2] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[0] , final_vertices[3] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
         // face 2
         TRI_FillTriangleTex(
-            fv[4] , fv[5] , fv[6] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[4] , final_vertices[5] , final_vertices[6] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[4] , fv[7] , fv[6] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[4] , final_vertices[7] , final_vertices[6] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
         // face 3
         TRI_FillTriangleTex(
-            fv[4] , fv[5] , fv[1] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[4] , final_vertices[5] , final_vertices[1] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[4] , fv[0] , fv[1] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[4] , final_vertices[0] , final_vertices[1] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
         // face 4
         TRI_FillTriangleTex(
-            fv[7] , fv[6] , fv[2] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[7] , final_vertices[6] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[7] , fv[3] , fv[2] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[7] , final_vertices[3] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
         // face 5
         TRI_FillTriangleTex(
-            fv[5] , fv[1] , fv[2] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[5] , final_vertices[1] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[5] , fv[6] , fv[2] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[5] , final_vertices[6] , final_vertices[2] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
         // face 6
         TRI_FillTriangleTex(
-            fv[4] , fv[0] , fv[3] ,
-            tv[0] , tv[1] , tv[2] ,
+            final_vertices[4] , final_vertices[0] , final_vertices[3] ,
+            texture_coords[0] , texture_coords[1] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
         TRI_FillTriangleTex(
-            fv[4] , fv[7] , fv[3] ,
-            tv[0] , tv[3] , tv[2] ,
+            final_vertices[4] , final_vertices[7] , final_vertices[3] ,
+            texture_coords[0] , texture_coords[3] , texture_coords[2] ,
             depth_buffer , pixel_buffer
         );
 
