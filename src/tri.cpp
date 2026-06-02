@@ -10,18 +10,18 @@ void bounding_box(
     int* out_x_1, int* out_y_1
 )
 {
-    *out_x_0 = std::max(0, (int)std::min(v1.x, std::min(v2.x, v3.x)));
-    *out_y_0 = std::max(0, (int)std::min(v1.y, std::min(v2.y, v3.y)));
-    *out_x_1 = std::min(WINDOW_WIDTH,  (int)std::max(v1.x, std::max(v2.x, v3.x)));
-    *out_y_1 = std::min(WINDOW_HEIGHT, (int)std::max(v1.y, std::max(v2.y, v3.y)));
+    *out_x_0 = std::max(0, (int)std::min(v1.get_x(), std::min(v2.get_x(), v3.get_x())));
+    *out_y_0 = std::max(0, (int)std::min(v1.get_y(), std::min(v2.get_y(), v3.get_y())));
+    *out_x_1 = std::min(WINDOW_WIDTH,  (int)std::max(v1.get_x(), std::max(v2.get_x(), v3.get_x())));
+    *out_y_1 = std::min(WINDOW_HEIGHT, (int)std::max(v1.get_y(), std::max(v2.get_y(), v3.get_y())));
 }
 
 float tri_area(la::vec3 v1, la::vec3 v2, la::vec3 v3)
 {
     return 0.5f * std::abs(
-        v1.x * (v2.y - v3.y) +
-        v2.x * (v3.y - v1.y) +
-        v3.x * (v1.y - v2.y)
+        v1.get_x() * (v2.get_y() - v3.get_y()) +
+        v2.get_x() * (v3.get_y() - v1.get_y()) +
+        v3.get_x() * (v1.get_y() - v2.get_y())
     );
 }
 
@@ -67,15 +67,15 @@ void TRI_FillTriangleTex(
             float u = tri_area(frag, v2, v3) / total_area;
             float v = tri_area(frag, v1, v3) / total_area;
             float w = tri_area(frag, v1, v2) / total_area;
-            float fz = v1.z*u + v2.z*v + v3.z*w;
+            float fz = v1.get_z()*u + v2.get_z()*v + v3.get_z()*w;
 
             if (u + v + w > 0.998f && u + v + w < 1.002f)
             {
                 int idx = i * WINDOW_WIDTH + j;
                 if (depth_buffer[idx] > fz)
                 {
-                    int texel_x = (int)((u*tv1.x + v*tv2.x + w*tv3.x) * texture_width);
-                    int texel_y = (int)((u*tv1.y + v*tv2.y + w*tv3.y) * texture_height);
+                    int texel_x = (int)((u*tv1.get_x() + v*tv2.get_x() + w*tv3.get_x()) * texture_width);
+                    int texel_y = (int)((u*tv1.get_y() + v*tv2.get_y() + w*tv3.get_y()) * texture_height);
 
                     if (texel_x >= 0 && texel_x < texture_width &&
                         texel_y >= 0 && texel_y < texture_height)
