@@ -68,7 +68,6 @@ int main(void)
     la::vec4 fv[8];
 
     float last_frame_time = clock();
-    float frame_time = 0;
 
     float total_time = 0.0f;
     while (game_is_running == 0)
@@ -206,34 +205,39 @@ void init_window(SDL_Window** window , SDL_Renderer** renderer)
 void process_input(int* game_is_running)
 {
     SDL_Event event;
-    SDL_PollEvent(&event);
-
-    if (event.type == SDL_QUIT) {
-        *game_is_running = 1;
-    }
-
-    if (event.type == SDL_KEYDOWN)
+    while (SDL_PollEvent(&event))
     {
-        if (event.key.keysym.sym == SDLK_w) {
-            cam_pos = cam_pos + (cam_aim - cam_pos).Normalize() * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_s) {
-            cam_pos = cam_pos - (cam_aim - cam_pos).Normalize() * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_a) {
-            la::vec3 cam_right = (world_up * cam_pos).Normalize();
-            cam_pos = cam_pos - cam_right * 0.1f;
-            cam_aim = cam_aim - cam_right * 0.1f;
-        } else if (event.key.keysym.sym == SDLK_d) {
-            la::vec3 cam_right = (world_up * cam_pos).Normalize();
-            cam_pos = cam_pos + cam_right * 0.1f;
-            cam_aim = cam_aim + cam_right * 0.1f;
+        if (event.type == SDL_QUIT) {
+            *game_is_running = 1;
         }
-
-        view_mat = la::mat4().LookAt(
-            cam_pos ,
-            cam_aim ,
-            world_up
-        );
+        if (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE) {
+            *game_is_running = 1;
+        }
     }
+
+    // poll every key's state this frame
+    const Uint8* keys = SDL_GetKeyboardState(NULL);
+
+    float cam_speed = 1.0f * frame_time;   // frame_time keeps it consistent regardless of FPS
+
+    if (keys[SDL_SCANCODE_W]) {
+        cam_pos = cam_pos + (cam_aim - cam_pos).Normalize() * cam_speed;
+    }
+    if (keys[SDL_SCANCODE_S]) {
+        cam_pos = cam_pos - (cam_aim - cam_pos).Normalize() * cam_speed;
+    }
+    if (keys[SDL_SCANCODE_A]) {
+        la::vec3 cam_right = (world_up * cam_pos).Normalize();
+        cam_pos = cam_pos - cam_right * cam_speed;
+        cam_aim = cam_aim - cam_right * cam_speed;
+    }
+    if (keys[SDL_SCANCODE_D]) {
+        la::vec3 cam_right = (world_up * cam_pos).Normalize();
+        cam_pos = cam_pos + cam_right * cam_speed;
+        cam_aim = cam_aim + cam_right * cam_speed;
+    }
+
+    view_mat = la::mat4().LookAt(cam_pos, cam_aim, world_up);
 }
 
 void reset_depth_buffer(float* depth_buffer)

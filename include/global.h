@@ -34,5 +34,6 @@ extern float z_far;
 extern float fov;
 extern la::mat4 proj_mat;
 
+extern float frame_time;
 
 #endif

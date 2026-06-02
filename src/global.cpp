@@ -38,3 +38,6 @@ float z_near = 0.1f;
 float z_far = 10.0f;
 float fov = la::radians(40.0f);
 la::mat4 proj_mat = la::mat4().PerspectiveMat(fov , z_near , z_far);
+
+
+float frame_time = 0.0f;
