@@ -1,6 +1,6 @@
 CC = g++
 C_FLAGS = -Wall -Wextra -O3 -g3 -fopenmp
-L_FLAGS = -lSDL2 -lm
+L_FLAGS = -lm
 
 BUILD_DIR = build
 INCLUDE_DIR = include
@@ -9,7 +9,7 @@ SRC_DIR = src
 LINALG_PATH = nimbus-linalg
 
 game: ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/framerate.o ${LINALG_PATH}/linalg.a
-	${CC} -o game ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/framerate.o ${LINALG_PATH}/linalg.a ${C_FLAGS} ${L_FLAGS}
+	${CC} -o game ${SRC_DIR}/main.cpp ${BUILD_DIR}/tri.o ${BUILD_DIR}/global.o ${BUILD_DIR}/framerate.o ${LINALG_PATH}/linalg.a libSDL2.a ${C_FLAGS} ${L_FLAGS}
 	
 ${BUILD_DIR}/tri.o: ${SRC_DIR}/tri.cpp ${INCLUDE_DIR}/tri.h | ${BUILD_DIR}
 	${CC} -o ${BUILD_DIR}/tri.o ${SRC_DIR}/tri.cpp ${C_FLAGS} -c

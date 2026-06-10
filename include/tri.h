@@ -1,7 +1,7 @@
 #include "../nimbus-linalg/include/vec.h"
 #include "../nimbus-linalg/include/mat.h"
 
-#include <SDL2/SDL.h>
+#include "SDL2/SDL.h"
 
 void bounding_box(
     la::vec3 v1 , la::vec3 v2 , la::vec3 v3 ,

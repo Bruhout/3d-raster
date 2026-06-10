@@ -1,7 +1,6 @@
 #include <iostream>
 #include <time.h>
 
-#include <SDL2/SDL.h>
 #include <omp.h>                         // NEW: OpenMP
 
 #include "../nimbus-linalg/include/vec.h"
@@ -10,6 +9,7 @@
 #include "../include/tri.h"
 #include "../include/global.h"
 #include "../include/framerate.h"
+#include "../include/SDL2/SDL.h"
 
 void init_window(SDL_Window** window , SDL_Renderer** renderer);
 void process_input(int* game_is_running);
